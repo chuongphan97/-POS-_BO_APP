@@ -1,0 +1,50 @@
+body {
+    margin: 0 auto;
+    padding: 25px;
+}
+
+a {
+    color: #3c8dbc !important;
+    text-decoration: none;
+}
+
+a.edit:hover {
+    cursor: pointer;
+    color: blue !important;
+}
+
+a.delete:hover {
+    color: red !important;
+}
+
+.message{
+    color:green;
+}
+
+label.error{
+    margin-top: 5px;
+    color: red;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+form {
+    margin-block-end: 1em;
+}
+
+table th {
+    background-color: #4CAF50 !important;
+    color: #fff;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+table td {
+    border: 1px solid #ddd;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}

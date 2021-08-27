@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="/resource/css/bootstrap.css">
+  <link rel="stylesheet" href="/resource/fontawesome-free-5.15.3-web/css/all.css">
+  <link rel="stylesheet" href="/resource/css/sweetalert2.min.css">
+  <script type="text/javascript" src="/resource/js/sweetalert2.min.js"></script>
+  <script type="text/javascript" src="/resource/js/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="/resource/js/jquery.validate-1.19.3.min.js"></script>
+  <script type="text/javascript" src="/resource/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="/resource/css/style.css">
+</head>
+<body>
+<div class="container-fluid" id="bg-image" style="height: 710px">
+  <div class="container" >
+    <div class="row">
+      <!-- MENU -->
+      <div class="col-lg-8 border" style="height: 645px;">
+        <!-- MENU HEADER -->
+        <div class="row">
+          <header class="d-flex flex-wrap justify-content-left py-3 border-bottom" >
+            <a href="#" class="btn btn-warning text-white allSchedule" style="margin-left: 2rem;">Quầy vé</a>
+            <a href="#" class="btn btn-warning text-white allProduct" style="margin-left: 2rem;">Quầy đồ uống</a>
+          </header>
+        </div>
+        <!-- CATEGORIES -->
+        <div class="row">
+          <nav class="navbar navbar-expand-lg navbar-light bg-light rounded mb-2">
+            <div class="container-fluid">
+              <div class="navbar-collapse">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 allItemProduct">
+                  <li class="nav-item searchFilm" id="">
+                    <select class="nav-link fw-bold" name="schedule" id="schedule">
+
+                    </select>
+
+                  </li>
+                  <li class="nav-item">
+                    <div class="input-group">
+                      <input type="text" class="form-control" id="searchFilmName" placeholder="Tìm kiếm...">
+                      <div class="input-group-append">
+                        <button class="btn searchSchedule">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+
+              </div>
+            </div>
+          </nav>
+        </div>
+        <!-- MENU -->
+        <div class="row overflow-auto" style="height: 509px" id="menuProduct">
+
+        </div>
+      </div>
+      <!-- ORDER -->
+      <div class="col-lg-4 border rounded" style="height: 645px">
+        <div class="row">
+          <div class="panel" style="height: 645px">
+            <div class="panel-heading">
+              <h4 class="d-flex justify-content-between align-items-center ml-5 mt-2 mb-2">
+                <span class="text-black">Đơn hàng hiện tại</span>
+                <span class="btn btn-outline-danger clearOrder">Xóa tất cả</span>
+              </h4>
+            </div>
+            <div id="allList">
+              <div class="current-order panel-body overflow-auto border" style="height: 180px; margin-bottom: 10px" id="ticket">
+
+              </div>
+              <div class="current-order panel-body overflow-auto border" style="height: 180px; margin-bottom: 10px" id="orderProductList">
+
+              </div>
+
+              <div class="current-order panel-body border" style="height: 50px;margin-bottom: 10px " id="chooseMemberName">
+                <input type="hidden" id="memberId" value="">
+              </div>
+              <div class="panel-body border" style="height: 150px; margin-top: 10px">
+                <div class="d-flex justify-content-between p-2 pb-0">
+                  <h5>Tổng</h5>
+                  <input hidden id="total" value="">
+                  <h5><strong>0</strong></h5>
+                </div>
+                <div class="d-flex justify-content-between p-2 pb-0">
+                  <h5>Khách đưa</h5>
+                  <div class="d-flex justify-content-between">
+                    <input type="text" value="" id="received">
+                    <span class="input-group-text">đ</span>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between p-2 pb-0">
+                  <h5>Tiền thừa</h5>
+                  <h5 id="balanced"></h5>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <!-- FOOTER -->
+    </div>
+    <div class="row">
+      <footer class="footer mt-auto p-2 border rounded">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-4 p-1 border-right d-flex justify-content-around align-items-center">
+              <div class="">
+                <h5><span id="user"></span></h5>
+                <input type="hidden" id="username-hidden" value="">
+                <i class="fas fa-user"></i>
+              </div>
+              <a class="logout btn btn-warning text-white">Đăng xuất</a>
+            </div>
+            <div class="col-lg-4 p-1  d-flex justify-content-around align-items-center">
+              <div class="row row1">
+                <a href="#" class="btn btn-warning text-white col-lg-5 createMember">Tạo thành viên</a>
+                <div class="input-group">
+                  <input type="text" class="form-control" style="flex: none; width: 55%" id="search" placeholder="Tìm kiếm...">
+                  <div class="input-group-append">
+                    <button class="btn searchMember" type="submit">
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 p-1 d-flex justify-content-around align-items-center">
+              <button class="btn btn-warning w-100 h-100 text-white" style="margin-left: 1.1rem;" id="createToOrder">
+                Thanh toán
+              </button>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<div class="modal  fade" id="seatsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Tạo mới thành viên</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form class="parsley-examples" id="create-form">
+              <fieldset class="row m-2">
+              <div class="col-lg-12">
+                <label>Tên thành viên<span class="text-danger">*</span></label>
+                <input type="text" name="member_name" parsley-trigger="change" required placeholder="Nhập tên thành viên" class="form-control" id="member_name">
+              </div>
+              <div class="col-lg-12">
+                <label>Số điện thoại<span class="text-danger">*</span></label>
+                <input type="number" name="phoneNumber" parsley-trigger="change" required placeholder="Nhập số điện thoại" class="form-control" id="phoneNumber">
+              </div>
+              <div class="col-lg-12">
+                <label>Email<span class="text-danger">*</span></label>
+                <input name="email" id="email" type="email" placeholder="Nhập địa chỉ email" required class="form-control">
+              </div>
+              </fieldset>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="reset" class="btn btn-secondary dismiss-modal" data-bs-dismiss="modal" >Đóng</button>
+          <button type="button" class="btn btn-primary " id="create-button">Tạo mới</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="searchModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header float-right">
+          <h5>Danh sách các thành viên</h5>
+          <button type="button" class="btn-close close-button" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <table class="table table-bordered">
+              <thead>
+              <tr>
+                <th>Tên thành viên</th>
+                <th>Số điện thoại</th>
+                <th>Email</th>
+                <th>Hạng vé</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody id="detailMember">
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<link rel="stylesheet" href="/resource/css/sweetalert2.min.css">
+<script type="text/javascript" src="/resource/js/sweetalert2.min.js"></script>
+<script src="/js/app.js"></script>
+<script src="/assets/js/vendor.min.js"></script>
+
+<!--Morris Chart-->
+<script src="/assets/libs/morris-js/morris.min.js"></script>
+<script src="/assets/libs/raphael/raphael.min.js"></script>
+
+<!-- Init js -->
+<script src="/assets/js/pages/morris.init.js"></script>
+
+<!-- App js -->
+<script src="/assets/js/app.min.js"></script>
+
+
+<script type="text/javascript" src="/resource/js/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="/resource/js/jquery.validate-1.19.3.min.js"></script>
+<script src="/resource/js/jquery.dataTables.min.js"></script>
+<script src="/js/staff/app.js"></script>
+</html>

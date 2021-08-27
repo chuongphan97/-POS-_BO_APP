@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <link rel="stylesheet" href="/css/mystyle.css">
+        <link rel="stylesheet" href="/css/sweetalert2.min.css">
+        
+</head>
+<body class="img js-fullheight" style="background-image: url(/img/bg.jpg);">
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center mb-5">
+                <img src="/img/logoTeam.png" alt="image">
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="login-wrap p-0">
+                    <h3 class="mb-4 text-center">Đăng nhập</h3>
+                    <form action="#" class="signin-form">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập" required autofocus>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Mật khẩu" required>
+                            <span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                            <button type="button" class="form-control btn btn-primary btn-block px-3" id="btnLogin" >Đăng nhập</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="/js/jquery-3.6.0.min.js"></script>
+<script src="/js/sweetalert2.min.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/popper.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<!-- <script src="/js/main.js"></script> -->
+
+<script>
+
+    function loginHandle() {
+        let user = {
+            username: $("#username").val(),
+            password: $("#password").val()
+        };
+
+        $.ajax({
+            type: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            url: "http://localhost:8080/api/login",
+            data: JSON.stringify(user)
+        }).done((newUser) => {
+            console.log(newUser);
+            setCookie("JWT", newUser.token)
+            if  (newUser.roles[0].authority === "STAFF"){
+                window.location.href = "http://localhost:5000/app";
+            }
+        }).fail((resp) => {''
+            App.showErrorAlert("Đã xảy ra lỗi. Vui lòng kiểm tra tên đăng nhập hoặc mật khẩu!");
+        });
+    }
+
+    $("#btnLogin").on("click", loginHandle);
+
+    function setCookie(cName, cValue) {
+        const d = new Date();
+        d.setTime(d.getTime() + (24*60*60*1000));
+        let expires = "expires="+ d.toUTCString();
+        document.cookie = cName + "=" + cValue + ";" + expires + ";path=/";
+}
+</script>
+
+</body>
+</html>
+
+
+

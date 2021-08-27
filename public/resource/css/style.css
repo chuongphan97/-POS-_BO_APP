@@ -1,0 +1,52 @@
+body {
+    margin: 0 auto;
+    padding: 15px;
+}
+
+a {
+    color: #3c8dbc !important;
+    text-decoration: none;
+}
+
+a.edit:hover {
+    cursor: pointer;
+    color: blue !important;
+}
+
+a.delete:hover {
+    color: red !important;
+}
+
+.message{
+    color:green;
+}
+
+label.error{
+    margin-top: 5px;
+    color: red;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+form {
+    margin-block-end: 1em;
+}
+
+/*!* CURRENT ORDER *!*/
+/*.current-order{*/
+/*    height: 300px;*/
+/*}*/
+
+.row1{
+    flex-wrap: nowrap !important;
+}
+
+li.searchFilm:not(:last-child){
+    margin-right: 450px;
+}
+
+.seat, .seat-view {
+    width: 75px;
+}

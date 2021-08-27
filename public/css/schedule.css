@@ -1,0 +1,119 @@
+
+h1 {
+    color: #fff;
+    margin: 40px 0 60px 0;
+    font-weight: 300;
+}
+
+.our-team-main {
+    width: 100%;
+    height: auto;
+    border-bottom: 5px #323233 solid;
+    background-color: rgb(225, 243, 245);
+    text-align: center;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    transition: 0.5s;
+    margin-bottom: 28px;
+}
+
+.our-team-main img {
+    border-radius: 50%;
+    margin-bottom: 20px;
+    width: 90px;
+}
+
+.our-team-main h3 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.our-team-main p {
+    margin-bottom: 0;
+}
+
+.team-back {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 5px 15px 0 15px;
+    text-align: left;
+    background: rgb(225, 243, 245);
+}
+
+.team-front {
+    width: 100%;
+    height: auto;
+    position: relative;
+    z-index: 10;
+    background: rgb(225, 243, 245);
+    padding: 15px;
+    bottom: 0px;
+    transition: all 0.5s ease;
+}
+.btnSchedule{
+    border: none !important;
+}
+.btnShow{
+    border: none !important;
+    height: 295px;
+}
+.h4Schedule{
+    float: left;
+    padding-left: 20px;
+}
+.setActive{
+    position: relative;
+    left: 214px;
+    bottom: 42px;
+    width: 143px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: x-large;
+}
+.bodyShow .a{
+    font-weight: bold;
+    float: left;
+    padding-left: 30px;
+    font-size: 15px;
+}
+.bodyShow  .b1{
+
+    padding-right: 40px;
+    font-size: larger;
+
+}
+.bodyShow .b2{
+    padding-right: 115px;
+    font-size: larger;
+
+}
+.bodyShow .b3{
+    padding-right: 100px;
+    font-size: larger;
+
+}
+.bodyShow .b4{
+    padding-right: 105px;
+    font-size: larger;
+}
+.bodyShow .b5{
+    font-size: larger;
+    float: right;
+    padding-right: 20px;
+}
+.bodyShow .c{
+    padding-bottom: 20px;
+}
+.bodyShow .d{
+    float: right;
+}
+.thInput{
+    padding-left: 500px;
+}
+.form-control{
+    width: 270px;
+}
