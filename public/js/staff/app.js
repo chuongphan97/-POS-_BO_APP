@@ -63,7 +63,7 @@ function getSchedules(){
     $.ajax({
         type: "GET",
         url: "http://localhost:8080/schedules/allSchedule"
-    }).done(function (schedules) {
+    }).done((schedules) => {
         let content = ``;
         for (let i = 0; i < schedules.length ; i++) {
             let d1 = Date.parse(schedules[i].schedule_date);
@@ -79,7 +79,7 @@ function getSchedules(){
             }
         }
         $("#schedule").html(content);
-        $("#schedule").on("change",function (){
+        $("#schedule").on("change",() => {
             let id = $("#schedule option:selected").attr('value');
             getShows(id)
         })
@@ -267,9 +267,11 @@ function getCurrentShow(){
             })
         }
         else {
+            console.log("askldjklasjdlksdjdskl")
+            
             $.ajax({
                 type: "GET",
-                url: `http://localhost:8080/show/allShowsToday/${schedule.schedule_id}`
+                url: `http://localhost:8080/show/allShows/${schedule.schedule_id}`
             }).done((shows) => {
                 let content =``;
                 for (let i = 0; i < shows.length; i++) {
@@ -514,11 +516,11 @@ function showListSeats(roomId){
         $("#seatsModal .modal-content").html(content);
         $("#seatsModal").modal("show");
 
-        $(".seat").on("click", function (){
-            let id = $(this).attr("value");
-            
-            socket.emit("clientRequests", id, $("#username-hidden").val());
-            
+        $(".seat").on("click",function() {
+            if ($(this).hasClass("seat")){
+                let id = $(this).attr("value");
+                socket.emit("clientRequests", id, $("#username-hidden").val());
+            }
         })
     })
 }
@@ -569,23 +571,7 @@ function deleteTicketFromOrder(seatId){
 function checkChoosingSeat(){
     let schedule_id = $("#schedule").val();
     let username = $("#username-hidden").val();
-    $.ajax({
-        type: "GET",
-        url: `http://localhost:8080/show/allShows/${schedule_id}`
-    }).done((shows) => {
-        for (let i = 0; i < shows.length; i++) {
-            $.ajax({
-                type: "GET",
-                url: `http://localhost:8080/seat/getSeatsByRoom/${shows[i].room.room_id}`
-            }).done((seats) => {
-                for (let j = 0; j < seats.length; j++) {
-                    if (seats[j].seatStatus.id === 2 && seats[j].user.username === username){
-                        deleteTicketFromOrder(seats[j].seat_id);
-                    }
-                }
-            })
-        }
-    })
+    socket.emit("clearChoosingSeat", schedule_id, username);
 }
 
 //Quầy vé
@@ -1120,7 +1106,6 @@ function subProduct(id){
         type: "GET",
         url: `http://localhost:8080/app/findProduct/${id}`,
         success: function (data){
-            console.log(data)
             let productName = data.product_name;
             let indexProduct = checkSelected(order.products,productName);
             if (order.products[indexProduct].amount === 1){
@@ -1533,32 +1518,62 @@ $(".clearOrder").on("click", function (){
 
 $(".logout").on("click", logout);
 
-socket.on("serverResponse", (id, username) => {
+socket.on("serverResponse", (id, username, seat) => {
+    if (seat.seatStatus.id === 2) {
+        if (username === $("#username-hidden").val()) {
+            $("#s_"+id).addClass("btn-success");
+            $("#s_"+id).removeClass("btn-light");  
 
-    
-    
-    if (username === $("#username-hidden").val()) {
-        // selectSeat(id);   
-        console.log(username)
-        console.log("#s_"+id)
-        $("#s_"+id).addClass("btn-success");
-        $("#s_"+id).removeClass("btn-light");    
+            $.ajax({
+                type: "GET",
+                url: `http://localhost:8080/show/findShowByRoomId/${seat.room.room_id}`
+            }).done((show) => {
+                let newTicket = {
+                    seat: seat,
+                    show: show
+                }
+                order.ticket.push(newTicket);
+                drawOrder();
+            })
+        } else {
+            $("#s_"+id).addClass("btn-danger seat-view");
+            $("#s_"+id).removeClass("btn-light seat"); 
+        }
     } else {
-        $("#s_"+id).addClass("btn-danger");
-        $("#s_"+id).removeClass("btn-light"); 
+        if (username === $("#username-hidden").val()) {
+            $("#s_"+id).removeClass("btn-success");
+            $("#s_"+id).addClass("btn-light");   
+            deleteTicketFromOrder(seat.seat_id); 
+        } else {
+            
+            $("#s_"+id).removeClass("btn-danger seat-view");
+            $("#s_"+id).addClass("btn-light seat"); 
+        }
     }
-        // socket.emit("reload", id);
+
+    
     
 })
 
-socket.on("reloadResponse", (id) => {
-    $.ajax({
-        type: "GET",
-        url: `http://localhost:8080/seat/findById/${id}`
-    }).done((seat) => {
-        // showListSeats(seat.room.room_id);
-    })
-})
+socket.on("clearSeatResponse",(username, shows ) => {
+        for (let i = 0; i < shows.length; i++) {
+            $.ajax({
+                type: "GET",
+                url: `http://localhost:8080/seat/getSeatsByRoom/${shows[i].room.room_id}`
+            }).done((seats) => {
+                for (let j = 0; j < seats.length; j++) {
+                    if (seats[j].seatStatus.id === 2 && seats[j].user.username === username ){
+                        if (username === $("#username-hidden").val()){
+                            deleteTicketFromOrder(seats[j].seat_id);
+                        } else {
+                            $("#s_"+seats[j].seat_id).removeClass("btn-danger seat-view");
+                            $("#s_"+seats[j].seat_id).addClass("btn-light seat");
+                        }
+                    }
+                }
+            })
+        }   
+} )
 
 // ALready function
 $(() => {

@@ -26,16 +26,20 @@ io.on("connection", (socket) =>{
   })
 
   socket.on("clientRequests", (id, username) => {
-    io.sockets.in(socket.Phong).emit("serverResponse",  id, username);
+    
     let url = `http://localhost:8080/seat/selectSeatById/${id}/${username}`;
 
-    axios.put(url);
-    
-
+    axios.put(url).then((resp) => {
+      io.sockets.in(socket.Phong).emit("serverResponse",  id, username, resp.data);
+    });
   })
 
-  socket.on("reload", (id)=>{
-    socket.emit("reloadResponse", id)
+  socket.on("clearChoosingSeat", (schedule_id, username) => {
+    let url =  `http://localhost:8080/show/allShows/${schedule_id}`;
+
+    axios.get(url).then((resp) => {
+      io.sockets.in(socket.Phong).emit("clearSeatResponse", username, resp.data);
+    })
   })
 
   socket.on("client", (seat) => {
