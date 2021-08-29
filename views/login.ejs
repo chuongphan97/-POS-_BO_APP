@@ -67,10 +67,11 @@
             url: "http://localhost:8080/api/login",
             data: JSON.stringify(user)
         }).done((newUser) => {
-            console.log(newUser);
-            setCookie("JWT", newUser.token)
             if  (newUser.roles[0].authority === "STAFF"){
                 window.location.href = "http://localhost:5000/app";
+                setCookie("JWT", newUser.token)
+            } else {
+                window.location.href = "http://localhost:5000/403";
             }
         }).fail((resp) => {''
             App.showErrorAlert("Đã xảy ra lỗi. Vui lòng kiểm tra tên đăng nhập hoặc mật khẩu!");

@@ -79,3 +79,7 @@ app.get("/", (req, res) => {
 app.get("/app", (req, res) => {
   res.render("app");
 });
+
+app.get("/403", (req, res) => {
+  res.render("403")
+})

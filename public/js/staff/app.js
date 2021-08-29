@@ -1,13 +1,15 @@
 let socket = io();
 
 function getUser(){
-    if (getCookie("JWT") !== ""){
+    if (parseJwt(getCookie("JWT")).user.authorities[0] !== "STAFF") {
+        window.location.href = "http://localhost:5000/403"
+    } else if (parseJwt(getCookie("JWT")).user.authorities[0] === "STAFF"){
         let user = parseJwt(getCookie("JWT")).user;
         $("#user").html(`${user.username}`);
         $("#username-hidden").val(user.username);
         socket.emit("logging", user.username)
         socket.emit("create-room", "selectSeat");
-    } else {
+    } else  {
     window.location.href = "http://localhost:5000/";
    }
 }
