@@ -1,7 +1,13 @@
+const PORT = "8080";
+const BASE_URL = "http://localhost:" + PORT;
+
 let socket = io();
 
 function getUser(){
-    if (parseJwt(getCookie("JWT")).user.authorities[0] !== "STAFF") {
+    if (getCookie("JWT") === "") {
+        window.location.href = "http://localhost:5000/";
+    }
+    else if (parseJwt(getCookie("JWT")).user.authorities[0] !== "STAFF") {
         window.location.href = "http://localhost:5000/403"
     } else if (parseJwt(getCookie("JWT")).user.authorities[0] === "STAFF"){
         let user = parseJwt(getCookie("JWT")).user;
@@ -9,9 +15,7 @@ function getUser(){
         $("#username-hidden").val(user.username);
         socket.emit("logging", user.username)
         socket.emit("create-room", "selectSeat");
-    } else  {
-    window.location.href = "http://localhost:5000/";
-   }
+    }
 }
 
 function logout(){
@@ -64,7 +68,7 @@ let order = {
 function getSchedules(){
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/schedules/allSchedule"
+        url: BASE_URL+"/schedules/allSchedule"
     }).done((schedules) => {
         let content = ``;
         for (let i = 0; i < schedules.length ; i++) {
@@ -92,12 +96,12 @@ function getSchedules(){
 function getShows(scheduleId){
     $.ajax({
         type: "GET",
-        url: `http://localhost:8080/schedules/${scheduleId}`
+        url: BASE_URL+`/schedules/${scheduleId}`
     }).done((schedule) =>{
         if (schedule.schedule_date === App.getToday()){
             $.ajax({
                 type: "GET",
-                url: `http://localhost:8080/show/allActiveShowsToday/${schedule.schedule_id}`
+                url: BASE_URL+`/show/allActiveShowsToday/${schedule.schedule_id}`
             }).done((shows) => {
                 let content =``;
                 for (let i = 0; i < shows.length; i++) {
@@ -131,7 +135,7 @@ function getShows(scheduleId){
                     let roomId = $(this).val();
                     $.ajax({
                         type: "GET",
-                        url: `http://localhost:8080/show/findShowByRoomId/${roomId}`
+                        url: BASE_URL+`/show/findShowByRoomId/${roomId}`
                     }).done((show) => {
                         if (show.status) {
                             showListSeats(roomId);
@@ -144,7 +148,7 @@ function getShows(scheduleId){
                 for (let i =0; i < shows.length; i++){
                     $.ajax({
                         type: "GET",
-                        url: `http://localhost:8080/seat/getSeatsByRoom/${shows[i].room.room_id}`
+                        url: BASE_URL+`/seat/getSeatsByRoom/${shows[i].room.room_id}`
                     }).done((seats) =>{
                         $(`#admit${shows[i].room.room_id}`).html(`
                             <p>${App.countTakenSeat(seats)}/100</p>
@@ -156,7 +160,7 @@ function getShows(scheduleId){
         else {
             $.ajax({
                 type: "GET",
-                url: `http://localhost:8080/show/allShows/${schedule.schedule_id}`
+                url: BASE_URL+`/show/allShows/${schedule.schedule_id}`
             }).done((shows) => {
                 let content =``;
                 for (let i = 0; i < shows.length; i++) {
@@ -190,7 +194,7 @@ function getShows(scheduleId){
                     let roomId = $(this).val();
                     $.ajax({
                         type: "GET",
-                        url: `http://localhost:8080/show/findShowByRoomId/${roomId}`
+                        url: BASE_URL+`/show/findShowByRoomId/${roomId}`
                     }).done((show) => {
                         if (show.status) {
                             showListSeats(roomId);
@@ -202,7 +206,7 @@ function getShows(scheduleId){
                 for (let i =0; i < shows.length; i++){
                     $.ajax({
                         type: "GET",
-                        url: `http://localhost:8080/seat/getSeatsByRoom/${shows[i].room.room_id}`
+                        url: BASE_URL+`/seat/getSeatsByRoom/${shows[i].room.room_id}`
                     }).done((seats) =>{
                         $(`#admit${shows[i].room.room_id}`).html(`
                             <p>${App.countTakenSeat(seats)}/100</p>
@@ -218,12 +222,12 @@ function getCurrentShow(){
     let id = $("#schedule option:selected").attr('value');
     $.ajax({
         type: "GET",
-        url: `http://localhost:8080/schedules/${id}`
+        url: BASE_URL+`/schedules/${id}`
     }).done((schedule) =>{
         if (schedule.schedule_date === App.getToday()){
             $.ajax({
                 type: "GET",
-                url: `http://localhost:8080/show/allActiveShowsToday/${schedule.schedule_id}`
+                url: BASE_URL+`/show/allActiveShowsToday/${schedule.schedule_id}`
             }).done((shows) => {
                 let content =``;
                 for (let i = 0; i < shows.length; i++) {
@@ -258,7 +262,7 @@ function getCurrentShow(){
                 for (let i =0; i < shows.length; i++){
                     $.ajax({
                         type: "GET",
-                        url: `http://localhost:8080/seat/getSeatsByRoom/${shows[i].room.room_id}`
+                        url: BASE_URL+`/seat/getSeatsByRoom/${shows[i].room.room_id}`
                     }).done((seats) =>{
                         $(`#admit${shows[i].room.room_id}`).html(`
                             <p>${App.countTakenSeat(seats)}/100</p>
@@ -269,11 +273,9 @@ function getCurrentShow(){
             })
         }
         else {
-            console.log("askldjklasjdlksdjdskl")
-            
             $.ajax({
                 type: "GET",
-                url: `http://localhost:8080/show/allShows/${schedule.schedule_id}`
+                url: BASE_URL+`/show/allShows/${schedule.schedule_id}`
             }).done((shows) => {
                 let content =``;
                 for (let i = 0; i < shows.length; i++) {
@@ -305,7 +307,7 @@ function getCurrentShow(){
                     let roomId = $(this).val();
                     $.ajax({
                         type: "GET",
-                        url: `http://localhost:8080/show/findShowByRoomId/${roomId}`
+                        url: BASE_URL+`/show/findShowByRoomId/${roomId}`
                     }).done((show) => {
                         if (show.status) {
                             showListSeats(roomId);
@@ -317,7 +319,7 @@ function getCurrentShow(){
                 for (let i =0; i < shows.length; i++){
                     $.ajax({
                         type: "GET",
-                        url: `http://localhost:8080/seat/getSeatsByRoom/${shows[i].room.room_id}`
+                        url: BASE_URL+`/seat/getSeatsByRoom/${shows[i].room.room_id}`
                     }).done((seats) =>{
                         $(`#admit${shows[i].room.room_id}`).html(`
                             <p>${App.countTakenSeat(seats)}/100</p>
@@ -335,7 +337,7 @@ function searchFilmName(){
 
     $.ajax({
         type: "GET",
-        url: `http://localhost:8080/show/searchShow/${schedule_id}/${film_name}`
+        url: BASE_URL+`/show/searchShow/${schedule_id}/${film_name}`
     }).done((shows) => {
         let content ="";
         for (let i = 0; i < shows.length; i++) {
@@ -369,7 +371,7 @@ function searchFilmName(){
             let roomId = $(this).val();
             $.ajax({
                 type: "GET",
-                url: `http://localhost:8080/show/findShowByRoomId/${roomId}`
+                url: BASE_URL+`/show/findShowByRoomId/${roomId}`
             }).done((show) => {
                 if (show.status) {
                     showListSeats(roomId);
@@ -381,7 +383,7 @@ function searchFilmName(){
         for (let i =0; i < shows.length; i++){
             $.ajax({
                 type: "GET",
-                url: `http://localhost:8080/seat/getSeatsByRoom/${shows[i].room.room_id}`
+                url: BASE_URL+`/seat/getSeatsByRoom/${shows[i].room.room_id}`
             }).done((seats) =>{
                 $(`#admit${shows[i].room.room_id}`).html(`
                             <p>${App.countTakenSeat(seats)}/100</p>
@@ -395,7 +397,7 @@ function showListSeatsFromInActiveShow(roomId){
     let username = $("#username-hidden").val();
     $.ajax({
         type: "GET",
-        url: `http://localhost:8080/seat/getSeatsByRoom/${roomId}`
+        url: BASE_URL+`/seat/getSeatsByRoom/${roomId}`
     }).done((seats) => {
         let content = ` <div class="modal-header">
                 <h5 class="modal-title" id="room-name">${seats[0].room.room_name}</h5>
@@ -461,7 +463,7 @@ function showListSeats(roomId){
     let username = $("#username-hidden").val();
     $.ajax({
         type: "GET",
-        url: `http://localhost:8080/seat/getSeatsByRoom/${roomId}`
+        url: BASE_URL+`/seat/getSeatsByRoom/${roomId}`
     }).done((seats) => {
         let content = ` <div class="modal-header">
                 <h5 class="modal-title" id="room-name">${seats[0].room.room_name}</h5>
@@ -533,14 +535,14 @@ function selectSeat(seatId){
     let username = $("#username-hidden").val();
     $.ajax({
         type: "PUT",
-        url: `http://localhost:8080/seat/selectSeatById/${seatId}/${username}`
+        url: BASE_URL+`/seat/selectSeatById/${seatId}/${username}`
     }).done((seat) => {
         socket.emit("client", seat)
         showListSeats(seat.room.room_id);
         if (seat.seatStatus.id === 2){
             $.ajax({
                 type: "GET",
-                url: `http://localhost:8080/show/findShowByRoomId/${seat.room.room_id}`
+                url: BASE_URL+`/show/findShowByRoomId/${seat.room.room_id}`
             }).done((show) => {
                 let newTicket = {
                     seat: seat,
@@ -559,7 +561,7 @@ function selectSeat(seatId){
 function deleteTicketFromOrder(seatId){
     $.ajax({
         type: "PUT",
-        url: `http://localhost:8080/seat/setEmpty/${seatId}`
+        url: BASE_URL+`/seat/setEmpty/${seatId}`
     }).done((seat) => {
         for (let i = 0; i < order.ticket.length; i++) {
             if (order.ticket[i].seat.seat_id === seat.seat_id){
@@ -609,7 +611,7 @@ function getScheduleOfTicket(){
 function getScheduleChangeTab(){
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/schedules/allSchedule"
+        url: BASE_URL+"/schedules/allSchedule"
     }).done(function (schedules) {
         let content = ``;
         for (let i = 0; i < schedules.length ; i++) {
@@ -638,12 +640,12 @@ function getCurrentShowChangeTab(){
     let id = $("#schedule").val();
     $.ajax({
         type: "GET",
-        url: `http://localhost:8080/schedules/${id}`
+        url: BASE_URL+`/schedules/${id}`
     }).done((schedule) =>{
         if (schedule.schedule_date === App.getToday()){
             $.ajax({
                 type: "GET",
-                url: `http://localhost:8080/show/allActiveShowsToday/${schedule.schedule_id}`
+                url: BASE_URL+`/show/allActiveShowsToday/${schedule.schedule_id}`
             }).done((shows) => {
                 let content =``;
                 for (let i = 0; i < shows.length; i++) {
@@ -678,7 +680,7 @@ function getCurrentShowChangeTab(){
                 for (let i =0; i < shows.length; i++){
                     $.ajax({
                         type: "GET",
-                        url: `http://localhost:8080/seat/getSeatsByRoom/${shows[i].room.room_id}`
+                        url: BASE_URL+`/seat/getSeatsByRoom/${shows[i].room.room_id}`
                     }).done((seats) =>{
                         $(`#admit${shows[i].room.room_id}`).html(`
                             <p>${App.countTakenSeat(seats)}/100</p>
@@ -694,7 +696,7 @@ function getCurrentShowChangeTab(){
 function allItems(){
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/app/allProduct"
+        url: BASE_URL+"/app/allProduct"
     }).done(function (product){
         let content = "";
         for (let i = 0; i < product.length ; i++) {
@@ -729,7 +731,7 @@ function allItems(){
 function getAllCategory(){
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/app/allCategory"
+        url: BASE_URL+"/app/allCategory"
     }).done(function (category){
         let content = `<li class="nav-item">
                            <a class="nav-link btn-outline-warning fw-bold allListProduct" aria-current="page" href="#" >Tất cả</a>
@@ -755,9 +757,8 @@ function getAllCategory(){
 function searchProductByCategoryId(id){
     $.ajax({
         type: "GET",
-        url: `http://localhost:8080/app/menuProductByCategory/${id}`
+        url: BASE_URL+`/app/menuProductByCategory/${id}`
     }).done(function (product){
-        console.log(product)
         let content = "";
         for (let i = 0; i < product.length ; i++) {
             content += `
@@ -800,7 +801,6 @@ function createMemberApp(){
     }
 
     if ($("#create-form").valid()){
-        console.log(member)
         $.ajax({
             headers: {
                 'Accept': 'application/json',
@@ -808,7 +808,7 @@ function createMemberApp(){
             },
             type: "POST",
             data: JSON.stringify(member),
-            url: "http://localhost:8080/app/createNewMember"
+            url: BASE_URL+"/app/createNewMember"
         }).done(function (){
             $("#create-form")[0].reset();
             App.showSuccessAlert("Tạo mới thành viên thành công");
@@ -824,7 +824,7 @@ function searchByMember(){
     let string = $("#search").val();
     $.ajax({
         type:"GET",
-        url: `http://localhost:8080/app/searchMember/${string}`
+        url: BASE_URL+`/app/searchMember/${string}`
     }).done(function (member){
         if(member !== "") {
             let content = "";
@@ -847,7 +847,7 @@ function searchByMember(){
 
                 $.ajax({
                     type: "GET",
-                    url: `http://localhost:8080/app/chooseByMember/${id}`
+                    url: BASE_URL+`/app/chooseByMember/${id}`
                 }).done(function (member){
                     order.member = member;
                     $("#search").val("");
@@ -876,7 +876,7 @@ function checkSelected(arr, name){
 function getProduct(id){
     $.ajax({
         type: "GET",
-        url: `http://localhost:8080/app/findProduct/${id}`,
+        url: BASE_URL+`/app/findProduct/${id}`,
         success: function (data){
             let productName = data.product_name;
             let indexProduct = checkSelected(order.products,productName);
@@ -1041,7 +1041,6 @@ function drawOrder(){
         if  (order.total_product !== 0){
             order.total_product = total_product*(100-percent_discount)/100;
         }
-
     } else {
         content += `<div class="current-order panel-body border" style="height: 50px;margin-bottom: 10px " id="chooseMemberName">
                 <input type="hidden" id="memberId" value="">
@@ -1060,7 +1059,7 @@ function drawOrder(){
                 <div class="d-flex justify-content-between p-2 pb-0">
                   <h5>Khách đưa</h5>
                   <div class="d-flex justify-content-between">
-                    <input type="text" value="" id="received">
+                    <input type="number" value="" id="received">
                     <span class="input-group-text">đ</span>
                   </div>
                 </div>
@@ -1069,17 +1068,16 @@ function drawOrder(){
                   <h5 id="balanced"></h5>
                 </div>
               </div>`;
-
     $("#allList").html(content);
     $(".deleteMember").on("click", function (){
         App.showDeleteConfirmDialog().then((result) => {
             if (result.isConfirmed){
                 order.member = "";
                 drawOrder();
-
             }
         });
     })
+
     $(".delete-ticket").on("click", function (){
         let seatId = $(this).attr("value");
         App.showDeleteConfirmDialog().then((result) => {
@@ -1088,10 +1086,12 @@ function drawOrder(){
             }
         })
     })
+
     $(".addMoreProduct").on("click",function (){
         let id = $(this).attr("value");
         getProduct(id);
     })
+
     $(".subToProduct").on("click",function (){
         let id = $(this).attr("value");
         subProduct(id);
@@ -1106,7 +1106,7 @@ function drawOrder(){
 function subProduct(id){
     $.ajax({
         type: "GET",
-        url: `http://localhost:8080/app/findProduct/${id}`,
+        url: BASE_URL+`/app/findProduct/${id}`,
         success: function (data){
             let productName = data.product_name;
             let indexProduct = checkSelected(order.products,productName);
@@ -1145,7 +1145,7 @@ function emptyOrder(){
                 <div class="d-flex justify-content-between p-2 pb-0">
                   <h5>Khách đưa</h5>
                   <div class="d-flex justify-content-between">
-                    <input type="text" value="" id="received">
+                    <input type="number" value="" id="received">
                     <span class="input-group-text">đ</span>
                   </div>
                 </div>
@@ -1164,7 +1164,7 @@ function emptyOrder(){
                 <div class="d-flex justify-content-between p-2 pb-0">
                   <h5>Khách đưa</h5>
                   <div class="d-flex justify-content-between">
-                    <input type="text" value="" id="received">
+                    <input type="number" value="" id="received">
                     <span class="input-group-text">đ</span>
                   </div>
                 </div>
@@ -1183,7 +1183,7 @@ function emptyOrder(){
                 <div class="d-flex justify-content-between p-2 pb-0">
                   <h5>Khách đưa</h5>
                   <div class="d-flex justify-content-between">
-                    <input type="text" value="" id="received">
+                    <input type="number" value="" id="received">
                     <span class="input-group-text">đ</span>
                   </div>
                 </div>
@@ -1201,12 +1201,12 @@ function emptyOrder(){
 function updateClassMember(){
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/members/allMember"
+        url: BASE_URL+"/members/allMember"
     }).done((members) =>{
         for (let i = 0; i < members.length; i++) {
             $.ajax({
                 type: "GET",
-                url: `http://localhost:8080/visit/findByMemberId/${members[i].member_id}`
+                url: BASE_URL+`/visit/findByMemberId/${members[i].member_id}`
             }).done((visits) => {
                 if (members[i].aclass.class_id === 1){
                     if  (visits.length >= 25 && visits.length <50) {
@@ -1235,7 +1235,7 @@ function updateClassMember(){
 function updateMember(member, classId){
     $.ajax({
         type: "PUT",
-        url: `http://localhost:8080/members/update/${member.member_id}/${classId}`
+        url: BASE_URL+`/members/update/${member.member_id}/${classId}`
     })
 }
 
@@ -1275,7 +1275,7 @@ function createOrder(){
                     },
                     type: "POST",
                     data: JSON.stringify(newOrder),
-                    url: `http://localhost:8080/app/saveOrder/${$("#username-hidden").val()}`
+                    url:  BASE_URL+`/app/saveOrder/${newUser.username}`
                 }).done((resp) => {
 
                     for (let i = 0; i < order.products.length ; i++) {
@@ -1294,7 +1294,7 @@ function createOrder(){
                             },
                             type: "POST",
                             data: JSON.stringify(newOrderDetail),
-                            url: "http://localhost:8080/app/saveOrderDetail"
+                            url:  BASE_URL+"/app/saveOrderDetail"
                         })
                     }
 
@@ -1318,12 +1318,12 @@ function createOrder(){
                             },
                             type: "POST",
                             data: JSON.stringify(newTicket),
-                            url: "http://localhost:8080/app/saveTicket"
+                            url:  BASE_URL+"/app/saveTicket"
                         }).done((ticket) => {
                             saveTicket(ticket);
                         })
                     }
-                    App.showSuccessAlert("Create new order successfully!");
+                    App.showSuccessAlert("Thanh toán thành công");
                     deleteOrder();
                     $(".allSchedule").click();
 
@@ -1349,7 +1349,7 @@ function createOrder(){
                     },
                     type: "POST",
                     data: JSON.stringify(newOrder),
-                    url: "http://localhost:8080/app/saveOrder"
+                    url:  BASE_URL+`/app/saveOrder/${newUser.username}`
                 }).done((resp) => {
                     for (let i = 0; i < order.products.length ; i++) {
                         let newOrderDetail = {
@@ -1367,7 +1367,7 @@ function createOrder(){
                             },
                             type: "POST",
                             data: JSON.stringify(newOrderDetail),
-                            url: "http://localhost:8080/app/saveOrderDetail",
+                            url:  BASE_URL+"/app/saveOrderDetail",
                         })
                     }
                     for (let i = 0; i < order.ticket.length ; i++) {
@@ -1396,7 +1396,7 @@ function createOrder(){
                             },
                             type: "POST",
                             data: JSON.stringify(newTicket),
-                            url: "http://localhost:8080/app/saveTicket"
+                            url:  BASE_URL+"/app/saveTicket"
                         }).done((ticket) => {
                             saveTicket(ticket);
                         })
@@ -1413,32 +1413,31 @@ function createOrder(){
                             'Content-Type': 'application/json'
                         },
                         type: "POST",
-                        url: "http://localhost:8080/visit/save",
+                        url:  BASE_URL+"/visit/save",
                         data: JSON.stringify(visit)
                     })
-                    App.showSuccessAlert("Create new order successfully!");
+                    App.showSuccessAlert("Tạo mới đơn hàng thành công!");
                     deleteOrder();
                     $(".allSchedule").click();
                 })
             }
         })
     }
-
 }
 
 function saveTicket(ticket){
     $.ajax({
         type: "PUT",
-        url: `http://localhost:8080/app/setTakenSeat/${ticket.seat.seat_id}`
+        url: BASE_URL+`/app/setTakenSeat/${ticket.seat.seat_id}`
     })
 
     $.ajax({
         type: "GET",
-        url: `http://localhost:8080/show/findById/${ticket.show.show_id}`
+        url: BASE_URL+`/show/findById/${ticket.show.show_id}`
     }).done((show) => {
         $.ajax({
             type: "PUT",
-            url: `http://localhost:8080/films/addAdmit/${show.film.film_id}`
+            url: BASE_URL+`/films/addAdmit/${show.film.film_id}`
         })
     })
 }
@@ -1528,7 +1527,7 @@ socket.on("serverResponse", (id, username, seat) => {
 
             $.ajax({
                 type: "GET",
-                url: `http://localhost:8080/show/findShowByRoomId/${seat.room.room_id}`
+                url: BASE_URL+`/show/findShowByRoomId/${seat.room.room_id}`
             }).done((show) => {
                 let newTicket = {
                     seat: seat,
@@ -1561,7 +1560,7 @@ socket.on("clearSeatResponse",(username, shows ) => {
         for (let i = 0; i < shows.length; i++) {
             $.ajax({
                 type: "GET",
-                url: `http://localhost:8080/seat/getSeatsByRoom/${shows[i].room.room_id}`
+                url: BASE_URL+`/seat/getSeatsByRoom/${shows[i].room.room_id}`
             }).done((seats) => {
                 for (let j = 0; j < seats.length; j++) {
                     if (seats[j].seatStatus.id === 2 && seats[j].user.username === username ){
